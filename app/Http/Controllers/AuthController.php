@@ -21,12 +21,14 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|min:3|max:50',
             'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|digits:10',
             'password' => 'required|string|min:6|confirmed'
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'role' => 'user'
         ]);
@@ -65,7 +67,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('login');
+    return redirect('/')->with('success','Logged out');
     }
 
     // Show password reset request form

@@ -38,6 +38,14 @@
         </div>
       </div>
       <div class="input-group mb-3">
+        <input type="text" name="phone" class="form-control" placeholder="Phone (10 digits)" value="{{ old('phone') }}" pattern="^\d{10}$" maxlength="10" inputmode="numeric" required>
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-phone"></span>
+          </div>
+        </div>
+      </div>
+      <div class="input-group mb-3">
         <input type="password" name="password" class="form-control" placeholder="Password" required>
         <div class="input-group-append">
           <div class="input-group-text">

@@ -29,10 +29,49 @@
 <body>
     <h1>Welcome to OLX</h1>
     <p>Your trusted platform to buy and sell</p>
+        @if(session('success') || session('error'))
+            <div id="flash-messages" style="max-width:640px;margin:10px auto 0;display:flex;flex-direction:column;gap:10px;">
+                @if(session('success'))
+                    <div class="flash flash-success">
+                        <span>{{ session('success') }}</span>
+                        <button type="button" class="close-btn" aria-label="Close">×</button>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="flash flash-error">
+                        <span>{{ session('error') }}</span>
+                        <button type="button" class="close-btn" aria-label="Close">×</button>
+                    </div>
+                @endif
+            </div>
+            <style>
+                .flash{position:relative;padding:12px 44px 12px 16px;border-radius:6px;font-size:0.95em;font-weight:500;display:flex;align-items:center;justify-content:center;}
+                .flash-success{background:#d4edda;border:1px solid #c3e6cb;color:#155724;}
+                .flash-error{background:#f8d7da;border:1px solid #f5c2c7;color:#842029;}
+                .flash .close-btn{position:absolute;top:4px;right:8px;background:transparent;border:none;color:inherit;font-size:18px;cursor:pointer;line-height:1;padding:2px 6px;}
+                .flash .close-btn:hover{opacity:0.7;}
+                .flash.fade-out{animation:fadeOut .6s forwards;}
+                @keyframes fadeOut{to{opacity:0;transform:translateY(-4px);} }
+            </style>
+            <script>
+                document.addEventListener('DOMContentLoaded',function(){
+                    const flashes=document.querySelectorAll('.flash');
+                    flashes.forEach(f=>{
+                        const btn=f.querySelector('.close-btn');
+                        btn.addEventListener('click',()=>{f.classList.add('fade-out');setTimeout(()=>f.remove(),580);});
+                        setTimeout(()=>{ if(document.body.contains(f)){ f.classList.add('fade-out'); setTimeout(()=>f.remove(),580);} }, 6000);
+                    });
+                });
+            </script>
+        @endif
     <div class="actions">
         <a href="{{ route('login') }}" class="btn">Login</a>
         <a href="{{ route('register') }}" class="btn">Register</a>
-        <a href="{{ auth()->check() ? route('ads.create') : '#' }}" class="btn" {{ auth()->check() ? '' : 'onclick="alert(\'Please login to post an ad\')"' }}>Post Your Ad</a>
+        <a 
+            href="{{ auth()->check() ? route('ads.create') : route('login') }}" 
+            class="btn" 
+            @guest onclick="return confirm('You need to login to post an ad. Go to login page now?')" @endguest
+        >Post Your Ad</a>
     </div>
 
     <div class="ads-wrapper">

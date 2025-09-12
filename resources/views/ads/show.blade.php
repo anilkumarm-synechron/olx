@@ -56,7 +56,13 @@
         <div class="desc">{{ $ad->description }}</div>
     @endif
 
-    <div class="owner">Contact Seller: <strong>{{ $ad->user?->name }}</strong></div>
+    <div class="owner">
+        <strong>Contact Seller</strong><br>
+        <span>Name:</span> {{ $ad->user?->name }}<br>
+        <span>Email:</span> <a href="mailto:{{ $ad->user?->email }}">{{ $ad->user?->email }}</a><br>
+        @php $phone = $ad->user?->phone ?? null; @endphp
+        <span>Phone:</span> {{ $phone ? $phone : 'Not provided' }}
+    </div>
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function(){
