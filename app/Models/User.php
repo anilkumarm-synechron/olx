@@ -14,4 +14,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // Relationship: a user has many ads
+    public function ads()
+    {
+        return $this->hasMany(Ad::class);
+    }
 }

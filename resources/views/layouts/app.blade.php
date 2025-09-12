@@ -60,7 +60,7 @@
           </li>
           
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{{ route('admin.dashboard', ['view' => 'ads']) }}" class="nav-link {{ request('view')=='ads' ? 'active' : '' }}">
               <i class="nav-icon fas fa-ad"></i>
               <p>Ads</p>
             </a>

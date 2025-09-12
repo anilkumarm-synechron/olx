@@ -3,10 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\AdController;
+use App\Models\Ad;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return view('welcome');
+    $ads = Ad::with(['user','primaryPhoto','photos'])->latest()->take(20)->get();
+    return view('welcome', compact('ads'));
 });
 
 // Authentication routes
@@ -24,20 +27,26 @@ Route::post('password/email', [AuthController::class, 'sendResetLink'])->name('p
 Route::get('password/reset/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [AuthController::class, 'resetPassword'])->name('password.update');
 
-// Admin dashboard example
+// Authenticated routes
 Route::middleware(['auth'])->group(function () {
     Route::get('home', function () {
-        return view('home');
+        $ads = Ad::with(['user','primaryPhoto','photos'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->take(50)
+            ->get();
+        return view('home', compact('ads'));
     })->name('home');
+
+    Route::get('ads/create', [AdController::class, 'create'])->name('ads.create');
+    Route::post('ads', [AdController::class, 'store'])->name('ads.store');
+    Route::get('ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
+    Route::put('ads/{ad}', [AdController::class, 'update'])->name('ads.update');
+    Route::delete('ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
 });
 
-
-// Admin login (assuming admin role)
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('admin/dashboard', function () {
-//         return view('admin.dashboard');
-//     })->name('admin.dashboard');
-// });
+// Public ad show route
+Route::get('ads/{ad}', [AdController::class, 'show'])->name('ads.show');
 
 // Admin login form
 Route::get('admin/login', [AuthController::class, 'showLogin'])->name('admin.login');

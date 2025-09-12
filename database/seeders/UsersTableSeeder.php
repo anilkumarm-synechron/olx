@@ -10,22 +10,26 @@ class UsersTableSeeder extends Seeder
 {
     public function run()
     {
-        // Create an admin user
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password123'),
-            'role' => 'admin',
-        ]);
+        // Create or update admin user
+        User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('password123'),
+                'role' => 'admin',
+            ]
+        );
 
         // Create 5 regular users
         for ($i = 1; $i <= 5; $i++) {
-            User::create([
-                'name' => 'User ' . $i,
-                'email' => 'user' . $i . '@example.com',
-                'password' => Hash::make('password123'),
-                'role' => 'user',
-            ]);
+            User::updateOrCreate(
+                ['email' => 'user' . $i . '@example.com'],
+                [
+                    'name' => 'User ' . $i,
+                    'password' => Hash::make('password123'),
+                    'role' => 'user',
+                ]
+            );
         }
     }
 }
